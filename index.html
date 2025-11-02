@@ -34,6 +34,7 @@
             animation: gradient 15s ease infinite;
             min-height: 100vh;
             color: var(--text);
+            overflow-x: hidden;
         }
 
         @keyframes gradient {
@@ -61,6 +62,8 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border-radius: 0 0 20px 20px;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 100;
         }
 
         .nav-brand {
@@ -98,6 +101,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transform: translateZ(0);
         }
 
         .nav-item:hover {
@@ -139,6 +143,12 @@
             gap: 20px;
             flex: 1;
             padding: 0 20px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .main-content.loaded {
+            opacity: 1;
         }
 
         .sidebar {
@@ -148,6 +158,7 @@
             padding: 25px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
+            transform: translateZ(0);
         }
 
         .content-area {
@@ -155,6 +166,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative;
+            min-height: 600px;
         }
 
         /* Карточки */
@@ -165,6 +178,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
             margin-bottom: 20px;
+            transform: translateZ(0);
         }
 
         /* Формы */
@@ -240,6 +254,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transform: translateZ(0);
         }
 
         .btn-primary {
@@ -314,6 +329,8 @@
             gap: 10px;
             max-height: 400px;
             overflow-y: auto;
+            transform: translateZ(0);
+            -webkit-overflow-scrolling: touch;
         }
 
         .user-item {
@@ -324,6 +341,7 @@
             background: #F7FAFC;
             border-radius: 12px;
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         .user-item:hover {
@@ -370,6 +388,7 @@
             cursor: pointer;
             font-size: 12px;
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         /* Стили для чатов */
@@ -388,6 +407,7 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         .chat-item:hover {
@@ -469,12 +489,15 @@
             gap: 15px;
             margin-bottom: 20px;
             padding: 10px;
+            transform: translateZ(0);
+            -webkit-overflow-scrolling: touch;
         }
 
         .message {
             display: flex;
             max-width: 70%;
             position: relative;
+            transform: translateZ(0);
         }
 
         .own-message {
@@ -572,6 +595,7 @@
             padding: 20px;
             cursor: pointer;
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         .group-card:hover {
@@ -814,6 +838,7 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         .account-item:hover {
@@ -940,6 +965,7 @@
             gap: 5px;
             color: var(--text);
             transition: all 0.3s;
+            transform: translateZ(0);
         }
 
         .icon-btn:hover {
@@ -977,6 +1003,7 @@
             margin-bottom: 20px;
             transition: transform 0.3s;
             position: relative;
+            transform: translateZ(0);
         }
 
         .post-card:hover {
@@ -1020,6 +1047,12 @@
             margin: 15px 0;
             max-height: 400px;
             object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .post-image.loaded {
+            opacity: 1;
         }
 
         .post-stats {
@@ -1048,6 +1081,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transform: translateZ(0);
         }
 
         .like-button {
@@ -1195,10 +1229,40 @@
         /* Страницы */
         .page {
             display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            min-height: 100%;
+            will-change: transform, opacity;
         }
 
         .page.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .page.leaving {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .profile-header {
@@ -1395,6 +1459,18 @@
             .action-button {
                 padding: 8px 15px;
                 font-size: 12px;
+            }
+            
+            .page {
+                transform: translateX(20px);
+            }
+            
+            .page.active {
+                transform: translateX(0);
+            }
+            
+            .page.leaving {
+                transform: translateX(-20px);
             }
         }
 
@@ -1776,7 +1852,7 @@
                         </div>
                     </div>
 
-                    <div id="postsContainer">
+                    <div id="postsContainer" class="posts-container">
                         <div class="no-posts">
                             <i class="fas fa-newspaper" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
                             <h3>Лента пуста</h3>
@@ -2137,6 +2213,12 @@
         let currentChat = null;
         let currentGroup = null;
 
+        // Переменные для отслеживания состояния
+        let currentPage = null;
+        let pageTransitionInProgress = false;
+        let postsLoaded = false;
+        let friendsLoaded = false;
+
         // Админ аккаунт
         const ADMIN_EMAIL = 's8807710@gmail.com';
 
@@ -2281,6 +2363,121 @@
             initChats();
             loadChatsList();
             loadGroupsList();
+        }
+
+        // Оптимизированная функция показа страниц
+        function showPage(pageName) {
+            if (pageTransitionInProgress || currentPage === pageName) return;
+            
+            pageTransitionInProgress = true;
+            
+            const targetPage = document.getElementById(pageName + 'Page');
+            const activePage = document.querySelector('.page.active');
+            
+            // Если есть активная страница, сначала скрываем её
+            if (activePage) {
+                activePage.classList.add('leaving');
+                activePage.classList.remove('active');
+                
+                setTimeout(() => {
+                    activePage.classList.remove('leaving');
+                    
+                    // Показываем целевую страницу
+                    targetPage.classList.add('active');
+                    
+                    // Обновляем навигацию
+                    updateNavigation(pageName);
+                    
+                    // Загружаем данные для страницы
+                    loadPageData(pageName);
+                    
+                    currentPage = pageName;
+                    pageTransitionInProgress = false;
+                }, 200);
+            } else {
+                // Первый показ страницы
+                targetPage.classList.add('active');
+                updateNavigation(pageName);
+                loadPageData(pageName);
+                currentPage = pageName;
+                pageTransitionInProgress = false;
+            }
+        }
+
+        // Оптимизированная функция обновления навигации
+        function updateNavigation(pageName) {
+            // Убираем активный класс у всех пунктов меню
+            document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Активируем соответствующие пункты меню
+            const pageTitle = getPageTitle(pageName);
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.textContent.includes(pageTitle)) {
+                    item.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                if (item.textContent.includes(pageTitle)) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Оптимизированная загрузка данных для страницы
+        function loadPageData(pageName) {
+            const loaders = {
+                'feed': () => {
+                    // Ленивая загрузка постов
+                    if (!postsLoaded) {
+                        loadPosts();
+                        postsLoaded = true;
+                    }
+                },
+                'profile': () => {
+                    loadProfilePosts();
+                    updateUserStats();
+                },
+                'friends': () => {
+                    if (!friendsLoaded) {
+                        loadFriendsList();
+                        friendsLoaded = true;
+                    }
+                },
+                'chats': () => {
+                    loadChatsList();
+                },
+                'groups': () => {
+                    loadGroupsList();
+                },
+                'gallery': () => {
+                    loadUserGallery();
+                },
+                'archive': () => {
+                    loadArchiveAccounts();
+                },
+                'support': () => {
+                    loadSupportTickets();
+                },
+                'admin': () => {
+                    if (currentUser.role === 'admin') {
+                        loadAdminPanel();
+                    }
+                }
+            };
+
+            if (loaders[pageName]) {
+                // Используем requestAnimationFrame для плавности
+                requestAnimationFrame(() => {
+                    loaders[pageName]();
+                });
+            }
+            
+            // Закрываем мобильное меню
+            closeMobileMenu();
         }
 
         // Поиск пользователей
@@ -2501,8 +2698,15 @@
         function showMainApp() {
             loginPage.classList.add('hidden');
             registerPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
             navbar.classList.remove('hidden');
+            
+            // Показываем основной контент с анимацией
+            setTimeout(() => {
+                mainContent.classList.remove('hidden');
+                setTimeout(() => {
+                    mainContent.classList.add('loaded');
+                }, 50);
+            }, 100);
             
             // Проверяем админские права
             if (currentUser.email === ADMIN_EMAIL || currentUser.role === 'admin') {
@@ -2518,15 +2722,11 @@
             }
             
             updateUserInfo();
-            loadPosts();
             updateStats();
-            loadUserGallery();
-            loadSupportTickets();
-            loadFriendsList();
-            initChatSystem();
-            if (currentUser.role === 'admin') {
-                loadAdminPanel();
-            }
+            
+            // Инициализируем первую страницу
+            postsLoaded = false;
+            friendsLoaded = false;
             showPage('feed');
         }
 
@@ -2552,59 +2752,6 @@
         // Получить инициалы
         function getInitials(firstName, lastName) {
             return (firstName[0] + lastName[0]).toUpperCase();
-        }
-
-        // Показать страницу
-        function showPage(pageName) {
-            // Скрыть все страницы
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            // Убрать активный класс у всех пунктов меню
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.mobile-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Показать выбранную страницу
-            document.getElementById(pageName + 'Page').classList.add('active');
-
-            // Активировать соответствующий пункт меню
-            document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.textContent.includes(getPageTitle(pageName))) {
-                    item.classList.add('active');
-                }
-            });
-            
-            document.querySelectorAll('.mobile-nav-item').forEach(item => {
-                if (item.textContent.includes(getPageTitle(pageName))) {
-                    item.classList.add('active');
-                }
-            });
-
-            // Загрузить данные для страницы
-            if (pageName === 'profile') {
-                loadProfilePosts();
-            } else if (pageName === 'archive') {
-                loadArchiveAccounts();
-            } else if (pageName === 'support') {
-                loadSupportTickets();
-            } else if (pageName === 'friends') {
-                loadFriendsList();
-            } else if (pageName === 'chats') {
-                loadChatsList();
-            } else if (pageName === 'groups') {
-                loadGroupsList();
-            } else if (pageName === 'admin' && currentUser.role === 'admin') {
-                loadAdminPanel();
-            }
-            
-            // Закрыть мобильное меню
-            closeMobileMenu();
         }
 
         // Получить заголовок страницы
@@ -3395,6 +3542,233 @@
             alert(`Профиль пользователя:\n\nИмя: ${user.firstName} ${user.lastName}\nEmail: ${user.email}\nПостов: ${userPosts}\nДрузей: ${userFriends}\nБио: ${user.bio || 'Не указано'}`);
         }
 
+        // Оптимизированная загрузка постов с виртуализацией
+        function loadPosts() {
+            const postsContainer = document.getElementById('postsContainer');
+            const visiblePosts = posts.filter(post => 
+                !blockedUsers.includes(post.author.id) && 
+                !blockedForMe[currentUser.id]?.includes(post.author.id)
+            );
+            
+            if (visiblePosts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-newspaper" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>Лента пуста</h3>
+                        <p>Создайте первый пост! ✨</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Ограничиваем количество одновременно отображаемых постов
+            const postsToShow = visiblePosts.slice(0, 10);
+            
+            postsContainer.innerHTML = postsToShow.map(post => createPostHTML(post)).join('');
+            
+            // Ленивая загрузка изображений
+            lazyLoadImages();
+            
+            // Загружаем остальные посты при скролле
+            setupInfiniteScroll(visiblePosts, 10);
+        }
+
+        // Функция для бесконечного скролла
+        function setupInfiniteScroll(allPosts, initialCount) {
+            let loadedCount = initialCount;
+            const postsContainer = document.getElementById('postsContainer');
+            
+            const loadMorePosts = () => {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const pageHeight = document.documentElement.scrollHeight;
+                
+                if (scrollPosition >= pageHeight - 500 && loadedCount < allPosts.length) {
+                    const nextPosts = allPosts.slice(loadedCount, loadedCount + 5);
+                    nextPosts.forEach(post => {
+                        const postElement = document.createElement('div');
+                        postElement.className = 'post-card fade-in';
+                        postElement.innerHTML = createPostHTML(post);
+                        postsContainer.appendChild(postElement);
+                    });
+                    
+                    loadedCount += 5;
+                    lazyLoadImages();
+                }
+            };
+            
+            // Используем throttle для оптимизации
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (!scrollTimeout) {
+                    scrollTimeout = setTimeout(() => {
+                        scrollTimeout = null;
+                        loadMorePosts();
+                    }, 100);
+                }
+            });
+        }
+
+        // Ленивая загрузка изображений
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy-image');
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Оптимизированное создание HTML для поста
+        function createPostHTML(post) {
+            const imageHTML = post.image ? 
+                `<img data-src="${post.image}" class="post-image lazy-image" alt="Пост">` : '';
+            
+            return `
+                <div class="post-card fade-in">
+                    <div class="post-user">
+                        <div class="user-avatar">${getInitials(post.author.firstName, post.author.lastName)}</div>
+                        <div class="user-info">
+                            <h4>${post.author.firstName} ${post.author.lastName}</h4>
+                            <div class="username">@${post.author.username}</div>
+                            <div class="post-time">${formatDate(post.createdAt)}</div>
+                        </div>
+                        ${currentUser.role !== 'admin' ? `
+                            <button class="icon-btn report-btn" onclick="reportPost('${post.id}')" title="Пожаловаться">
+                                <i class="fas fa-flag"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                    
+                    ${imageHTML}
+                    
+                    <div class="post-stats">
+                        <span>${post.likes.length} ❤️</span>
+                        <span>${post.comments.length} 💬</span>
+                    </div>
+                    
+                    <div class="post-actions-buttons">
+                        <button class="action-button like-button ${post.likes.includes(currentUser.id) ? 'liked' : ''}" 
+                                onclick="toggleLike('${post.id}')">
+                            <i class="fas fa-heart"></i>
+                            ${post.likes.includes(currentUser.id) ? '❤️' : '🤍'} Нравится
+                        </button>
+                        <button class="action-button comment-button" onclick="toggleComments('${post.id}')">
+                            <i class="fas fa-comment"></i>
+                            Комментировать
+                        </button>
+                    </div>
+                    
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        <form class="comment-form" onsubmit="addComment('${post.id}', event)">
+                            <input type="text" id="comment-${post.id}" placeholder="Напишите комментарий... 💬" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                        
+                        <div class="comments-list">
+                            ${post.comments.map(comment => `
+                                <div class="comment">
+                                    <div class="comment-avatar">${getInitials(comment.author.firstName, comment.author.lastName)}</div>
+                                    <div class="comment-content">
+                                        <div class="comment-header">
+                                            <strong>${comment.author.firstName} ${comment.author.lastName}</strong>
+                                            <span>${formatDate(comment.createdAt)}</span>
+                                        </div>
+                                        <p>${comment.content}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Оптимизированная загрузка галереи
+        function loadUserGallery() {
+            const galleryContainer = document.getElementById('userGallery');
+            const userPhotos = userImages[currentUser.id] || [];
+
+            if (userPhotos.length === 0) {
+                galleryContainer.innerHTML = `
+                    <div class="no-posts" style="grid-column: 1 / -1;">
+                        <i class="fas fa-images" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>В вашей галерее пока нет фото 📸</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Добавляйте фото в свои посты!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Показываем только первые 12 изображений, остальные подгружаем по необходимости
+            const initialPhotos = userPhotos.slice(0, 12);
+            
+            galleryContainer.innerHTML = initialPhotos.map((photo, index) => `
+                <div class="gallery-item" onclick="viewImage('${photo}')">
+                    <img data-src="${photo}" class="lazy-image" alt="Фото ${index + 1}">
+                </div>
+            `).join('');
+            
+            // Ленивая загрузка изображений
+            lazyLoadImages();
+            
+            // Загрузка остальных изображений при скролле
+            if (userPhotos.length > 12) {
+                setupGalleryInfiniteScroll(userPhotos, 12);
+            }
+        }
+
+        // Бесконечный скролл для галереи
+        function setupGalleryInfiniteScroll(allPhotos, initialCount) {
+            let loadedCount = initialCount;
+            const galleryContainer = document.getElementById('userGallery');
+            
+            const loadMorePhotos = () => {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const pageHeight = document.documentElement.scrollHeight;
+                
+                if (scrollPosition >= pageHeight - 500 && loadedCount < allPhotos.length) {
+                    const nextPhotos = allPhotos.slice(loadedCount, loadedCount + 6);
+                    nextPhotos.forEach((photo, index) => {
+                        const photoElement = document.createElement('div');
+                        photoElement.className = 'gallery-item';
+                        photoElement.onclick = () => viewImage(photo);
+                        photoElement.innerHTML = `
+                            <img data-src="${photo}" class="lazy-image" alt="Фото ${loadedCount + index + 1}">
+                        `;
+                        galleryContainer.appendChild(photoElement);
+                    });
+                    
+                    loadedCount += 6;
+                    lazyLoadImages();
+                }
+            };
+            
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (!scrollTimeout) {
+                    scrollTimeout = setTimeout(() => {
+                        scrollTimeout = null;
+                        loadMorePhotos();
+                    }, 100);
+                }
+            });
+        }
+
         // Регистрация с проверкой существования аккаунта
         function register(event) {
             event.preventDefault();
@@ -3540,147 +3914,6 @@
             updateStats();
             loadUserGallery();
             showSuccess('Пост опубликован! 🎉');
-        }
-
-        // Загрузка постов
-        function loadPosts() {
-            const postsContainer = document.getElementById('postsContainer');
-            
-            // Фильтруем посты заблокированных пользователей
-            const visiblePosts = posts.filter(post => 
-                !blockedUsers.includes(post.author.id) && 
-                !blockedForMe[currentUser.id]?.includes(post.author.id)
-            );
-            
-            if (visiblePosts.length === 0) {
-                postsContainer.innerHTML = `
-                    <div class="no-posts">
-                        <i class="fas fa-newspaper" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <h3>Лента пуста</h3>
-                        <p>Создайте первый пост! ✨</p>
-                    </div>
-                `;
-                return;
-            }
-
-            postsContainer.innerHTML = visiblePosts.map(post => `
-                <div class="post-card fade-in">
-                    <div class="post-user">
-                        <div class="user-avatar">${getInitials(post.author.firstName, post.author.lastName)}</div>
-                        <div class="user-info">
-                            <h4>${post.author.firstName} ${post.author.lastName}</h4>
-                            <div class="username">@${post.author.username}</div>
-                            <div class="post-time">${formatDate(post.createdAt)}</div>
-                        </div>
-                        ${currentUser.role !== 'admin' ? `
-                            <button class="icon-btn report-btn" onclick="reportPost('${post.id}')" title="Пожаловаться">
-                                <i class="fas fa-flag"></i>
-                            </button>
-                        ` : ''}
-                    </div>
-                    
-                    <div class="post-content">
-                        <p>${post.content}</p>
-                    </div>
-                    
-                    ${post.image ? `<img src="${post.image}" class="post-image" alt="Пост">` : ''}
-                    
-                    <div class="post-stats">
-                        <span>${post.likes.length} ❤️</span>
-                        <span>${post.comments.length} 💬</span>
-                    </div>
-                    
-                    <div class="post-actions-buttons">
-                        <button class="action-button like-button ${post.likes.includes(currentUser.id) ? 'liked' : ''}" 
-                                onclick="toggleLike('${post.id}')">
-                            <i class="fas fa-heart"></i>
-                            ${post.likes.includes(currentUser.id) ? '❤️' : '🤍'} Нравится
-                        </button>
-                        <button class="action-button comment-button" onclick="toggleComments('${post.id}')">
-                            <i class="fas fa-comment"></i>
-                            Комментировать
-                        </button>
-                    </div>
-                    
-                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
-                        <form class="comment-form" onsubmit="addComment('${post.id}', event)">
-                            <input type="text" id="comment-${post.id}" placeholder="Напишите комментарий... 💬" required>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                        
-                        <div class="comments-list">
-                            ${post.comments.map(comment => `
-                                <div class="comment">
-                                    <div class="comment-avatar">${getInitials(comment.author.firstName, comment.author.lastName)}</div>
-                                    <div class="comment-content">
-                                        <div class="comment-header">
-                                            <strong>${comment.author.firstName} ${comment.author.lastName}</strong>
-                                            <span>${formatDate(comment.createdAt)}</span>
-                                        </div>
-                                        <p>${comment.content}</p>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Загрузка галереи пользователя
-        function loadUserGallery() {
-            const galleryContainer = document.getElementById('userGallery');
-            const userPhotos = userImages[currentUser.id] || [];
-
-            if (userPhotos.length === 0) {
-                galleryContainer.innerHTML = `
-                    <div class="no-posts" style="grid-column: 1 / -1;">
-                        <i class="fas fa-images" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p>В вашей галерее пока нет фото 📸</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">Добавляйте фото в свои посты!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            galleryContainer.innerHTML = userPhotos.map((photo, index) => `
-                <div class="gallery-item" onclick="viewImage('${photo}')">
-                    <img src="${photo}" alt="Фото ${index + 1}">
-                </div>
-            `).join('');
-        }
-
-        // Просмотр изображения
-        function viewImage(src) {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-                cursor: pointer;
-            `;
-            
-            const img = document.createElement('img');
-            img.src = src;
-            img.style.cssText = `
-                max-width: 90%;
-                max-height: 90%;
-                border-radius: 10px;
-            `;
-            
-            overlay.appendChild(img);
-            overlay.onclick = () => overlay.remove();
-            
-            document.body.appendChild(overlay);
         }
 
         // Загрузка постов профиля
@@ -3877,6 +4110,18 @@
             document.getElementById('profileStatLikes').textContent = totalLikes;
         }
 
+        // Обновление статистики пользователя
+        function updateUserStats() {
+            const userPosts = posts.filter(post => post.author.id === currentUser.id);
+            const totalLikes = userPosts.reduce((sum, post) => sum + post.likes.length, 0);
+            const userPhotos = userImages[currentUser.id] || [];
+            const totalPhotos = userPhotos.length;
+
+            document.getElementById('profileStatPosts').textContent = userPosts.length;
+            document.getElementById('profileStatPhotos').textContent = totalPhotos;
+            document.getElementById('profileStatLikes').textContent = totalLikes;
+        }
+
         // Редактирование профиля
         function editProfile() {
             const newBio = prompt('Расскажите о себе:', currentUser.bio || '');
@@ -3894,6 +4139,37 @@
                 updateUserInfo();
                 showSuccess('Профиль обновлен! ✅');
             }
+        }
+
+        // Просмотр изображения
+        function viewImage(src) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                cursor: pointer;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 10px;
+            `;
+            
+            overlay.appendChild(img);
+            overlay.onclick = () => overlay.remove();
+            
+            document.body.appendChild(overlay);
         }
 
         // Утилиты
