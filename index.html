@@ -1,1 +1,3969 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorSocial - Полная социальная сеть</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --info: #2196F3;
+            --danger: #E53E3E;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #FF6584 100%);
+            --gradient-2: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-3: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark: #2D3748;
+            --light: #F7FAFC;
+            --text: #4A5568;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Навигация */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-brand {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-badge {
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.6em;
+            margin-left: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Основной контент */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            padding: 0 20px 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Карточки */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        /* Формы */
+        .auth-container {
+            max-width: 450px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-subtitle {
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea, select {
+            padding: 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--text);
+            border: 2px solid #E2E8F0;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .form-switch {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text);
+        }
+
+        .switch-link {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Поиск */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+        }
+
+        /* Списки пользователей */
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .user-item:hover {
+            background: #EDF2F7;
+            transform: translateX(5px);
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .user-email {
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        /* Стили для чатов */
+        .chats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-item:hover {
+            background: #EDF2F7;
+            transform: translateX(5px);
+        }
+
+        .chat-info {
+            flex: 1;
+        }
+
+        .chat-partner-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .last-message {
+            font-size: 0.9em;
+            color: #718096;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .chat-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .last-time {
+            font-size: 0.8em;
+            color: #A0AEC0;
+        }
+
+        .unread-badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        /* Стили для окна чата */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E8F0;
+            margin-bottom: 20px;
+        }
+
+        .chat-partner-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .user-status {
+            font-size: 0.8em;
+            color: var(--success);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .message {
+            display: flex;
+            max-width: 70%;
+            position: relative;
+        }
+
+        .own-message {
+            align-self: flex-end;
+        }
+
+        .own-message .message-content {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .partner-message .message-content {
+            background: #F7FAFC;
+            color: var(--text);
+        }
+
+        .group-message .message-content {
+            background: #EBF8FF;
+            color: var(--text);
+        }
+
+        .message-content {
+            padding: 12px 15px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message-sender {
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .message-text {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 0.7em;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .message-actions {
+            position: absolute;
+            top: -10px;
+            right: 5px;
+            display: none;
+            gap: 5px;
+        }
+
+        .message:hover .message-actions {
+            display: flex;
+        }
+
+        .message-action-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        /* Стили для групп */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .group-card {
+            background: #F7FAFC;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .group-card:hover {
+            background: #EDF2F7;
+            transform: translateY(-5px);
+        }
+
+        .group-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .group-info h4 {
+            margin: 0 0 10px 0;
+            color: var(--dark);
+        }
+
+        .group-info p {
+            color: #718096;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .group-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8em;
+            color: #A0AEC0;
+        }
+
+        .user-select-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #F7FAFC;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .user-select-item label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0;
+            flex: 1;
+        }
+
+        .group-info-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .group-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Жалобы */
+        .complaint-item {
+            background: #F7FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .complaint-meta {
+            display: flex;
+            gap: 15px;
+            color: #718096;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .complaint-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Админ панель */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--gradient);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Эмодзи панель */
+        .emoji-panel {
+            position: absolute;
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .emoji-category {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .category-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .emoji-item {
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .emoji-item:hover {
+            background: var(--light);
+        }
+
+        /* Загрузка фото */
+        .image-upload-container {
+            margin: 15px 0;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .upload-btn {
+            background: var(--gradient-2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* Галерея */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Архив аккаунтов */
+        .accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .account-item:hover {
+            background: #EDF2F7;
+            transform: translateX(5px);
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .account-email {
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        /* Поддержка */
+        .support-ticket {
+            background: #F7FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ticket-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: #C6F6D5;
+            color: #276749;
+        }
+
+        .status-closed {
+            background: #FED7D7;
+            color: #C53030;
+        }
+
+        .status-pending {
+            background: #FEFCBF;
+            color: #744210;
+        }
+
+        .ticket-date {
+            color: #718096;
+            font-size: 0.8em;
+        }
+
+        /* Лента и посты */
+        .create-post-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .post-textarea {
+            flex: 1;
+            min-height: 80px;
+            resize: none;
+            font-family: inherit;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: var(--light);
+            transform: translateY(-1px);
+        }
+
+        .report-btn {
+            color: var(--danger);
+        }
+
+        .post-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .post-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        /* Посты */
+        .post-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .user-info h4 {
+            margin: 0;
+            color: var(--dark);
+            font-size: 1.1em;
+        }
+
+        .username {
+            color: var(--primary);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .post-time {
+            color: #A0AEC0;
+            font-size: 0.8em;
+        }
+
+        .post-content {
+            margin: 20px 0;
+            line-height: 1.6;
+            color: var(--text);
+            font-size: 1.1em;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 15px;
+            margin: 15px 0;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            color: #718096;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .post-actions-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .like-button {
+            color: #718096;
+        }
+
+        .like-button.liked {
+            color: #E53E3E;
+            background: #FED7D7;
+        }
+
+        .comment-button {
+            color: #718096;
+        }
+
+        .comment-button.active {
+            color: var(--primary);
+            background: #EBF4FF;
+        }
+
+        /* Комментарии */
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-form input {
+            flex: 1;
+        }
+
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 15px;
+        }
+
+        .comment-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .comment-header strong {
+            font-size: 0.9em;
+            color: var(--dark);
+        }
+
+        .comment-header span {
+            font-size: 0.8em;
+            color: #A0AEC0;
+        }
+
+        .comment-content p {
+            font-size: 0.9em;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Виджеты сайдбара */
+        .widget {
+            margin-bottom: 25px;
+        }
+
+        .widget-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        .trending-topics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .topic {
+            padding: 10px 15px;
+            background: #F7FAFC;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .topic:hover {
+            background: #EDF2F7;
+            transform: translateX(5px);
+        }
+
+        /* Страницы */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            border: 5px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Утилиты */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .error {
+            background: #FED7D7;
+            color: #C53030;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .success {
+            background: #C6F6D5;
+            color: #2D3748;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .blocked-account {
+            opacity: 0.6;
+            background: #FED7D7 !important;
+        }
+
+        .blocked-badge {
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            margin-left: 5px;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .app-container {
+                padding: 0 10px;
+            }
+            
+            .navbar {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .nav-item {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 0 10px 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .content-area {
+                order: 1;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block !important;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .emoji-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-width: none;
+                border-radius: 20px 20px 0 0;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .user-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .action-btn {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+            
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .post-actions {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .post-actions-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .action-button {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                margin: 20px auto;
+                padding: 25px;
+            }
+            
+            .auth-title {
+                font-size: 1.5em;
+            }
+            
+            .navbar {
+                padding: 10px 15px;
+            }
+            
+            .nav-brand {
+                font-size: 1.4em;
+            }
+            
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .complaint-actions {
+                flex-direction: column;
+            }
+            
+            .user-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Мобильное меню */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding: 80px 30px 30px;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-nav-item {
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav-item.active {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .mobile-nav-item:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateX(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Навигация -->
+        <div class="navbar hidden" id="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-heart"></i>
+                ColorSocial
+                <span class="admin-badge hidden" id="adminBadge">ADMIN</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu">
+                <div class="nav-item active" onclick="showPage('feed')">
+                    <i class="fas fa-home"></i>
+                    Лента
+                </div>
+                <div class="nav-item" onclick="showPage('profile')">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </div>
+                <div class="nav-item" onclick="showPage('friends')">
+                    <i class="fas fa-users"></i>
+                    Друзья
+                </div>
+                <div class="nav-item" onclick="showPage('chats')">
+                    <i class="fas fa-comments"></i>
+                    Чаты
+                </div>
+                <div class="nav-item" onclick="showPage('groups')">
+                    <i class="fas fa-user-friends"></i>
+                    Группы
+                </div>
+                <div class="nav-item" onclick="showPage('gallery')">
+                    <i class="fas fa-images"></i>
+                    Галерея
+                </div>
+                <div class="nav-item" onclick="showPage('archive')">
+                    <i class="fas fa-archive"></i>
+                    Архив
+                </div>
+                <div class="nav-item" onclick="showPage('support')">
+                    <i class="fas fa-headset"></i>
+                    Поддержка
+                </div>
+                <div class="nav-item hidden" id="adminNavItem" onclick="showPage('admin')">
+                    <i class="fas fa-shield-alt"></i>
+                    Админ-панель
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="mobile-menu" id="mobileMenu">
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mobile-nav-item active" onclick="showPage('feed'); closeMobileMenu()">
+                <i class="fas fa-home"></i>
+                Лента
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('profile'); closeMobileMenu()">
+                <i class="fas fa-user"></i>
+                Профиль
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('friends'); closeMobileMenu()">
+                <i class="fas fa-users"></i>
+                Друзья
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('chats'); closeMobileMenu()">
+                <i class="fas fa-comments"></i>
+                Чаты
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('groups'); closeMobileMenu()">
+                <i class="fas fa-user-friends"></i>
+                Группы
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('gallery'); closeMobileMenu()">
+                <i class="fas fa-images"></i>
+                Галерея
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('archive'); closeMobileMenu()">
+                <i class="fas fa-archive"></i>
+                Архив
+            </div>
+            <div class="mobile-nav-item" onclick="showPage('support'); closeMobileMenu()">
+                <i class="fas fa-headset"></i>
+                Поддержка
+            </div>
+            <div class="mobile-nav-item hidden" id="mobileAdminNavItem" onclick="showPage('admin'); closeMobileMenu()">
+                <i class="fas fa-shield-alt"></i>
+                Админ-панель
+            </div>
+        </div>
+
+        <!-- Эмодзи панель -->
+        <div class="emoji-panel" id="emojiPanel"></div>
+
+        <!-- Страница входа -->
+        <div class="auth-container" id="loginPage">
+            <div class="auth-header">
+                <h1 class="auth-title">С возвращением!</h1>
+                <p class="auth-subtitle">Войдите в свой аккаунт</p>
+            </div>
+            
+            <!-- Архив аккаунтов -->
+            <div class="accounts-list" id="savedAccounts" style="margin-bottom: 20px;"></div>
+
+            <form class="auth-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="loginPassword" required placeholder="Введите пароль">
+                </div>
+                <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="rememberMe" checked>
+                    <label for="rememberMe" style="margin: 0;">Запомнить меня</label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Войти
+                </button>
+            </form>
+            <div class="form-switch">
+                Нет аккаунта? <span class="switch-link" onclick="showRegister()">Создать аккаунт</span>
+            </div>
+        </div>
+
+        <!-- Страница регистрации -->
+        <div class="auth-container hidden" id="registerPage">
+            <div class="auth-header">
+                <h1 class="auth-title">Присоединяйтесь!</h1>
+                <p class="auth-subtitle">Создайте новый аккаунт</p>
+            </div>
+            <form class="auth-form" onsubmit="register(event)">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Имя:</label>
+                        <input type="text" id="regFirstName" required placeholder="Ваше имя">
+                    </div>
+                    <div class="form-group">
+                        <label>Фамилия:</label>
+                        <input type="text" id="regLastName" required placeholder="Ваша фамилия">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="regEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="regPassword" required placeholder="Не менее 6 символов">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Зарегистрироваться
+                </button>
+            </form>
+            <div class="form-switch">
+                Уже есть аккаунт? <span class="switch-link" onclick="showLogin()">Войти</span>
+            </div>
+        </div>
+
+        <!-- Основной контент (после входа) -->
+        <div class="main-content hidden" id="mainContent">
+            <!-- Сайдбар -->
+            <div class="sidebar">
+                <div class="widget">
+                    <div class="user-stats">
+                        <div class="stat">
+                            <div class="stat-number" id="statPosts">0</div>
+                            <div class="stat-label">Посты</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="statPhotos">0</div>
+                            <div class="stat-label">Фото</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="statLikes">0</div>
+                            <div class="stat-label">Лайки</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">
+                        <i class="fas fa-fire"></i>
+                        Популярное
+                    </div>
+                    <div class="trending-topics">
+                        <div class="topic">#путешествия 🌍</div>
+                        <div class="topic">#технологии 💻</div>
+                        <div class="topic">#искусство 🎨</div>
+                        <div class="topic">#спорт ⚽</div>
+                        <div class="topic">#музыка 🎵</div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">
+                        <i class="fas fa-info-circle"></i>
+                        О приложении
+                    </div>
+                    <p style="font-size: 0.9em; color: #718096; line-height: 1.5;">
+                        ColorSocial - ваша социальная сеть с чатами, группами и админ-панелью! 🎉
+                    </p>
+                </div>
+            </div>
+
+            <!-- Область контента -->
+            <div class="content-area">
+                <!-- Лента -->
+                <div class="page active" id="feedPage">
+                    <div class="create-post-card">
+                        <div class="post-header">
+                            <div class="user-avatar" id="currentUserAvatar">U</div>
+                            <textarea 
+                                class="post-textarea" 
+                                id="postContent" 
+                                placeholder="Что у вас нового? Поделитесь с друзьями! 😊"
+                                maxlength="2000"
+                            ></textarea>
+                        </div>
+                        
+                        <!-- Загрузка фото -->
+                        <div class="image-upload-container">
+                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                            <div class="upload-btn" onclick="document.getElementById('imageUpload').click()">
+                                <i class="fas fa-camera"></i>
+                                Добавить фото
+                            </div>
+                            <img id="imagePreview" class="image-preview" alt="Предпросмотр">
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-buttons">
+                                <button class="icon-btn" onclick="showEmojiPanel()">
+                                    <i class="fas fa-smile"></i>
+                                    Эмодзи
+                                </button>
+                                <button class="icon-btn" onclick="addRussianEmoji('😂')">
+                                    😂
+                                </button>
+                                <button class="icon-btn" onclick="addRussianEmoji('❤️')">
+                                    ❤️
+                                </button>
+                                <button class="icon-btn" onclick="addRussianEmoji('🔥')">
+                                    🔥
+                                </button>
+                            </div>
+                            <button class="post-button" onclick="createPost()">
+                                <i class="fas fa-paper-plane"></i>
+                                Опубликовать
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="postsContainer">
+                        <div class="no-posts">
+                            <i class="fas fa-newspaper" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <h3>Лента пуста</h3>
+                            <p>Создайте первый пост! ✨</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Профиль -->
+                <div class="page" id="profilePage">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileUserAvatar">U</div>
+                        <h1 id="profileUserName">Пользователь</h1>
+                        <p id="profileUserEmail">user@example.com</p>
+                        <div class="user-stats" style="max-width: 400px; margin: 20px auto;">
+                            <div class="stat">
+                                <div class="stat-number" id="profileStatPosts">0</div>
+                                <div class="stat-label">Посты</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" id="profileStatPhotos">0</div>
+                                <div class="stat-label">Фото</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" id="profileStatLikes">0</div>
+                                <div class="stat-label">Лайки</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 15px;">О себе</h3>
+                        <p id="profileBio">Пока ничего не рассказал о себе... 📝</p>
+                        <button class="btn btn-secondary" style="margin-top: 15px;" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Редактировать профиль
+                        </button>
+                    </div>
+
+                    <h3 style="margin: 20px 0 10px;">Мои посты</h3>
+                    <div id="profilePostsContainer">
+                        <!-- Посты пользователя -->
+                    </div>
+                </div>
+
+                <!-- Поиск друзей -->
+                <div class="page" id="friendsPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Поиск друзей 👥</h2>
+                        
+                        <div class="search-container">
+                            <input type="text" id="friendSearch" class="search-input" placeholder="Поиск по имени или email...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+
+                        <div id="searchResults" class="users-list">
+                            <!-- Результаты поиска -->
+                        </div>
+
+                        <h3 style="margin: 30px 0 15px;">Мои друзья</h3>
+                        <div id="friendsList" class="users-list">
+                            <!-- Список друзей -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Чаты -->
+                <div class="page" id="chatsPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">💬 Мои чаты</h2>
+                        
+                        <div class="search-container" style="margin-bottom: 20px;">
+                            <input type="text" id="chatSearch" class="search-input" placeholder="Поиск чатов...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+
+                        <div class="chats-list" id="chatsList">
+                            <!-- Список чатов -->
+                        </div>
+
+                        <button class="btn btn-primary" onclick="startNewChat()" style="margin-top: 20px;">
+                            <i class="fas fa-plus"></i>
+                            Новый чат
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Страница выбранного чата -->
+                <div class="page" id="chatPage">
+                    <div class="card">
+                        <div class="chat-header">
+                            <button class="btn btn-secondary" onclick="showPage('chats')">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <div class="chat-partner-info">
+                                <div class="user-avatar-small" id="chatPartnerAvatar">U</div>
+                                <div>
+                                    <div class="user-name" id="chatPartnerName">Пользователь</div>
+                                    <div class="user-status" id="chatPartnerStatus">в сети</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="blockUserForMe(currentChat)">
+                                <i class="fas fa-ban"></i>
+                            </button>
+                        </div>
+
+                        <div class="chat-messages" id="chatMessages">
+                            <!-- Сообщения чата -->
+                        </div>
+
+                        <div class="chat-input-container">
+                            <input type="text" id="chatMessageInput" placeholder="Введите сообщение..." class="chat-input">
+                            <button class="btn btn-primary" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Группы -->
+                <div class="page" id="groupsPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">👥 Группы</h2>
+                        
+                        <button class="btn btn-primary" onclick="showCreateGroupForm()" style="margin-bottom: 20px;">
+                            <i class="fas fa-plus"></i>
+                            Создать группу
+                        </button>
+
+                        <!-- Форма создания группы -->
+                        <div id="createGroupForm" class="hidden">
+                            <h3 style="margin-bottom: 15px;">Создать новую группу</h3>
+                            <form onsubmit="createGroup(event)">
+                                <div class="form-group">
+                                    <label>Название группы:</label>
+                                    <input type="text" id="groupName" required placeholder="Введите название группы">
+                                </div>
+                                <div class="form-group">
+                                    <label>Описание:</label>
+                                    <textarea id="groupDescription" placeholder="Описание группы (необязательно)"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Участники:</label>
+                                    <div id="groupMembersSelect" class="users-list">
+                                        <!-- Список друзей для выбора -->
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-users"></i>
+                                        Создать группу
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="hideCreateGroupForm()">
+                                        Отмена
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <h3 style="margin: 30px 0 15px;">Мои группы</h3>
+                        <div id="groupsList" class="groups-grid">
+                            <!-- Список групп -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Страница группового чата -->
+                <div class="page" id="groupChatPage">
+                    <div class="card">
+                        <div class="chat-header">
+                            <button class="btn btn-secondary" onclick="showPage('groups')">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <div class="group-info-header">
+                                <div class="group-avatar" id="groupChatAvatar">G</div>
+                                <div>
+                                    <div class="user-name" id="groupChatName">Группа</div>
+                                    <div class="user-status" id="groupChatMembers">0 участников</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="showGroupInfo()">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+
+                        <div class="chat-messages" id="groupChatMessages">
+                            <!-- Сообщения группового чата -->
+                        </div>
+
+                        <div class="chat-input-container">
+                            <input type="text" id="groupMessageInput" placeholder="Введите сообщение..." class="chat-input">
+                            <button class="btn btn-primary" onclick="sendGroupMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Галерея -->
+                <div class="page" id="galleryPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Моя галерея 📸</h2>
+                        <div id="userGallery" class="gallery-grid">
+                            <!-- Фотографии пользователя -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Архив аккаунтов -->
+                <div class="page" id="archivePage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Архив аккаунтов 🗂️</h2>
+                        <p style="margin-bottom: 20px; color: #718096;">
+                            Вы можете быстро переключаться между сохраненными аккаунтами 🔄
+                        </p>
+                        <div class="accounts-list" id="archiveAccountsList">
+                            <!-- Сохраненные аккаунты -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Поддержка -->
+                <div class="page" id="supportPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Центр поддержки 🛠️</h2>
+                        
+                        <div class="support-actions" style="margin-bottom: 30px;">
+                            <button class="btn btn-primary" onclick="showCreateTicketForm()">
+                                <i class="fas fa-plus"></i>
+                                Создать обращение
+                            </button>
+                        </div>
+
+                        <!-- Форма создания обращения -->
+                        <div id="createTicketForm" class="hidden">
+                            <h3 style="margin-bottom: 15px;">Новое обращение</h3>
+                            <form onsubmit="createSupportTicket(event)">
+                                <div class="form-group">
+                                    <label>Тема:</label>
+                                    <input type="text" id="ticketSubject" required placeholder="Кратко опишите проблему">
+                                </div>
+                                <div class="form-group">
+                                    <label>Тип проблемы:</label>
+                                    <select id="ticketType" required>
+                                        <option value="">Выберите тип</option>
+                                        <option value="technical">Техническая проблема</option>
+                                        <option value="account">Проблема с аккаунтом</option>
+                                        <option value="content">Жалоба на контент</option>
+                                        <option value="suggestion">Предложение</option>
+                                        <option value="other">Другое</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Описание:</label>
+                                    <textarea id="ticketDescription" required placeholder="Подробно опишите вашу проблему..." rows="4"></textarea>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Отправить
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="hideCreateTicketForm()">
+                                        Отмена
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Список обращений -->
+                        <div id="supportTicketsList">
+                            <h3 style="margin: 30px 0 15px;">Мои обращения</h3>
+                            <div id="ticketsContainer">
+                                <!-- Обращения пользователя -->
+                            </div>
+                        </div>
+
+                        <!-- Часто задаваемые вопросы -->
+                        <div style="margin-top: 40px;">
+                            <h3 style="margin-bottom: 20px;">Часто задаваемые вопросы ❓</h3>
+                            <div class="support-ticket">
+                                <h4>Как изменить пароль?</h4>
+                                <p>В данный момент функция смены пароля находится в разработке. 🛠️</p>
+                            </div>
+                            <div class="support-ticket">
+                                <h4>Почему не загружаются фото?</h4>
+                                <p>Проверьте формат изображения (JPG, PNG) и размер (не более 5MB). 📷</p>
+                            </div>
+                            <div class="support-ticket">
+                                <h4>Как удалить аккаунт?</h4>
+                                <p>Напишите в поддержку с темой "Удаление аккаунта". 🗑️</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Админ-панель -->
+                <div class="page" id="adminPage">
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Административная панель 🛡️</h2>
+                        
+                        <!-- Статистика -->
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalUsers">0</div>
+                                <div class="stat-label">Пользователей</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminBlockedUsers">0</div>
+                                <div class="stat-label">Заблокировано</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalPosts">0</div>
+                                <div class="stat-label">Постов</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalComplaints">0</div>
+                                <div class="stat-label">Жалоб</div>
+                            </div>
+                        </div>
+
+                        <!-- Поиск пользователей -->
+                        <div class="search-container" style="margin-bottom: 25px;">
+                            <input type="text" id="adminUserSearch" class="search-input" placeholder="Поиск пользователей...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+
+                        <!-- Список пользователей -->
+                        <h3 style="margin-bottom: 15px;">Управление пользователями</h3>
+                        <div id="adminUsersList" class="users-list">
+                            <!-- Список пользователей для админа -->
+                        </div>
+
+                        <!-- Жалобы -->
+                        <h3 style="margin: 30px 0 15px;">Жалобы пользователей 🚨</h3>
+                        <div id="adminComplaintsList">
+                            <!-- Список жалоб -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Хранилище данных
+        let users = JSON.parse(localStorage.getItem('social_users')) || [];
+        let posts = JSON.parse(localStorage.getItem('social_posts')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('current_user')) || null;
+        let savedAccounts = JSON.parse(localStorage.getItem('saved_accounts')) || [];
+        let userImages = JSON.parse(localStorage.getItem('user_images')) || {};
+        let supportTickets = JSON.parse(localStorage.getItem('support_tickets')) || [];
+        let friends = JSON.parse(localStorage.getItem('user_friends')) || {};
+        let complaints = JSON.parse(localStorage.getItem('user_complaints')) || [];
+        let blockedUsers = JSON.parse(localStorage.getItem('blocked_users')) || [];
+        let chats = JSON.parse(localStorage.getItem('user_chats')) || {};
+        let groups = JSON.parse(localStorage.getItem('user_groups')) || {};
+        let blockedForMe = JSON.parse(localStorage.getItem('blocked_for_me')) || {};
+        let currentChat = null;
+        let currentGroup = null;
+
+        // Админ аккаунт
+        const ADMIN_EMAIL = 's8807710@gmail.com';
+
+        // Русские эмодзи
+        const russianEmojis = {
+            'Эмоции': ['😂', '❤️', '😍', '🤣', '😊', '🎉', '😁', '🔥', '💕', '😎', '✨', '👍', '😢', '🙏', '🥰', '😘'],
+            'Люди': ['👋', '🙂', '😃', '😄', '😅', '🤗', '🤔', '😴', '🥳', '😇', '🤠', '🥺', '😭', '😡', '🤯'],
+            'Природа': ['🌞', '⭐', '🌟', '🌈', '☀️', '🌙', '⚡', '❄️', '🔥', '💧', '🌊'],
+            'Еда': ['🍕', '🍔', '🍟', '🌮', '🍣', '🍦', '🍩', '☕', '🍵', '🥤', '🍺'],
+            'Путешествия': ['🚗', '✈️', '🚀', '🏖️', '🗺️', '🎢', '🏰', '🌍', '🏔️', '⛺'],
+            'Спорт': ['⚽', '🏀', '🎾', '🏆', '🎯', '🥊', '🏃', '🚴', '🎿', '🏊'],
+            'Предметы': ['📱', '💻', '🎮', '📚', '🎵', '🎬', '💎', '🎁', '💡', '🔑'],
+            'Символы': ['✅', '❌', '➡️', '⬅️', '⬆️', '⬇️', '⏰', '📅', '💰', '🎯']
+        };
+
+        // Элементы DOM
+        const loginPage = document.getElementById('loginPage');
+        const registerPage = document.getElementById('registerPage');
+        const mainContent = document.getElementById('mainContent');
+        const navbar = document.getElementById('navbar');
+        const emojiPanel = document.getElementById('emojiPanel');
+        const adminBadge = document.getElementById('adminBadge');
+        const adminNavItem = document.getElementById('adminNavItem');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const mobileAdminNavItem = document.getElementById('mobileAdminNavItem');
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            initAdminAccount();
+            checkAuth();
+            loadSavedAccounts();
+            initImageUpload();
+            initEmojiPanel();
+            initSearch();
+            initChatSystem();
+            initMobileMenu();
+            
+            // Загружаем последний email если есть
+            const lastAccount = savedAccounts[savedAccounts.length - 1];
+            if (lastAccount) {
+                document.getElementById('loginEmail').value = lastAccount.email;
+            }
+        });
+
+        // Инициализация мобильного меню
+        function initMobileMenu() {
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+            
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', function(e) {
+                if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+                    closeMobileMenu();
+                }
+            });
+        }
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+        }
+
+        // Инициализация админ аккаунта
+        function initAdminAccount() {
+            const adminUser = users.find(user => user.email === ADMIN_EMAIL);
+            if (!adminUser) {
+                const newAdmin = {
+                    id: 'admin',
+                    firstName: 'Администратор',
+                    lastName: 'Системы',
+                    email: ADMIN_EMAIL,
+                    password: 'admin123',
+                    username: 'admin',
+                    bio: 'Администратор социальной сети',
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
+                };
+                users.push(newAdmin);
+                localStorage.setItem('social_users', JSON.stringify(users));
+            }
+        }
+
+        // Инициализация эмодзи панели
+        function initEmojiPanel() {
+            let emojiHTML = '';
+            
+            for (const [category, emojis] of Object.entries(russianEmojis)) {
+                emojiHTML += `
+                    <div class="emoji-category">
+                        <div class="category-title">${category}</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                            ${emojis.map(emoji => `
+                                <span class="emoji-item" onclick="addEmojiToText('${emoji}')">${emoji}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            emojiPanel.innerHTML = emojiHTML;
+        }
+
+        // Инициализация поиска
+        function initSearch() {
+            const friendSearch = document.getElementById('friendSearch');
+            const adminUserSearch = document.getElementById('adminUserSearch');
+            const chatSearch = document.getElementById('chatSearch');
+            
+            if (friendSearch) {
+                friendSearch.addEventListener('input', function() {
+                    searchUsers(this.value, 'searchResults');
+                });
+            }
+            
+            if (adminUserSearch) {
+                adminUserSearch.addEventListener('input', function() {
+                    searchUsers(this.value, 'adminUsersList', true);
+                });
+            }
+
+            if (chatSearch) {
+                chatSearch.addEventListener('input', function() {
+                    searchChats(this.value);
+                });
+            }
+        }
+
+        // Инициализация чатов
+        function initChats() {
+            if (!chats[currentUser.id]) {
+                chats[currentUser.id] = {};
+            }
+        }
+
+        // Инициализация системы чатов
+        function initChatSystem() {
+            initChats();
+            loadChatsList();
+            loadGroupsList();
+        }
+
+        // Поиск пользователей
+        function searchUsers(query, targetElement, isAdmin = false) {
+            const container = document.getElementById(targetElement);
+            if (!query.trim()) {
+                if (targetElement === 'searchResults') {
+                    container.innerHTML = '<div class="no-posts">Введите запрос для поиска друзей</div>';
+                } else {
+                    container.innerHTML = '<div class="no-posts">Введите запрос для поиска</div>';
+                }
+                return;
+            }
+
+            const searchResults = users.filter(user => 
+                user.id !== currentUser.id &&
+                !user.role && // Исключаем админов из поиска
+                (user.firstName.toLowerCase().includes(query.toLowerCase()) ||
+                 user.lastName.toLowerCase().includes(query.toLowerCase()) ||
+                 user.email.toLowerCase().includes(query.toLowerCase()))
+            );
+
+            if (searchResults.length === 0) {
+                container.innerHTML = '<div class="no-posts">Пользователи не найдены</div>';
+                return;
+            }
+
+            if (isAdmin) {
+                // Админский вид
+                container.innerHTML = searchResults.map(user => {
+                    const isBlocked = blockedUsers.includes(user.id);
+                    const isFriend = friends[currentUser.id]?.includes(user.id);
+                    return `
+                        <div class="user-item ${isBlocked ? 'blocked-account' : ''}">
+                            <div class="user-avatar-small">${getInitials(user.firstName, user.lastName)}</div>
+                            <div class="user-info">
+                                <div class="user-name">
+                                    ${user.firstName} ${user.lastName}
+                                    ${isBlocked ? '<span class="blocked-badge">ЗАБЛОКИРОВАН</span>' : ''}
+                                </div>
+                                <div class="user-email">${user.email}</div>
+                            </div>
+                            <div class="user-actions">
+                                ${!isBlocked ? `
+                                    <button class="action-btn btn-danger" onclick="blockUser('${user.id}')">
+                                        <i class="fas fa-ban"></i> Заблокировать
+                                    </button>
+                                ` : `
+                                    <button class="action-btn btn-success" onclick="unblockUser('${user.id}')">
+                                        <i class="fas fa-check"></i> Разблокировать
+                                    </button>
+                                `}
+                                <button class="action-btn btn-warning" onclick="viewUserProfile('${user.id}')">
+                                    <i class="fas fa-eye"></i> Просмотр
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                // Обычный поиск друзей
+                container.innerHTML = searchResults.map(user => {
+                    const isFriend = friends[currentUser.id]?.includes(user.id);
+                    const isBlocked = blockedUsers.includes(user.id);
+                    const isBlockedForMe = blockedForMe[currentUser.id]?.includes(user.id);
+                    
+                    if (isBlocked || isBlockedForMe) return '';
+                    
+                    return `
+                        <div class="user-item">
+                            <div class="user-avatar-small">${getInitials(user.firstName, user.lastName)}</div>
+                            <div class="user-info">
+                                <div class="user-name">${user.firstName} ${user.lastName}</div>
+                                <div class="user-email">${user.email}</div>
+                            </div>
+                            <div class="user-actions">
+                                ${!isFriend ? `
+                                    <button class="action-btn btn-primary" onclick="addFriend('${user.id}')">
+                                        <i class="fas fa-user-plus"></i> Добавить
+                                    </button>
+                                ` : `
+                                    <button class="action-btn btn-danger" onclick="removeFriend('${user.id}')">
+                                        <i class="fas fa-user-minus"></i> Удалить
+                                    </button>
+                                `}
+                                <button class="action-btn btn-warning" onclick="reportUser('${user.id}')">
+                                    <i class="fas fa-flag"></i> Пожаловаться
+                                </button>
+                                <button class="action-btn btn-success" onclick="startChatWithUser('${user.id}')">
+                                    <i class="fas fa-comment"></i> Чат
+                                </button>
+                                <button class="action-btn btn-secondary" onclick="blockUserForMe('${user.id}')">
+                                    <i class="fas fa-ban"></i> Заблокировать
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Поиск чатов
+        function searchChats(query) {
+            const chatsList = document.getElementById('chatsList');
+            const userChats = chats[currentUser.id] || {};
+            const chatIds = Object.keys(userChats);
+            
+            if (!query.trim()) {
+                loadChatsList();
+                return;
+            }
+
+            const filteredChats = chatIds.filter(chatId => {
+                const partner = users.find(u => u.id === chatId);
+                return partner && (
+                    partner.firstName.toLowerCase().includes(query.toLowerCase()) ||
+                    partner.lastName.toLowerCase().includes(query.toLowerCase()) ||
+                    partner.email.toLowerCase().includes(query.toLowerCase())
+                );
+            });
+
+            if (filteredChats.length === 0) {
+                chatsList.innerHTML = '<div class="no-posts">Чаты не найдены</div>';
+                return;
+            }
+
+            chatsList.innerHTML = filteredChats.map(chatId => {
+                const chat = userChats[chatId];
+                const partner = users.find(u => u.id === chatId);
+                if (!partner) return '';
+                
+                const lastMessage = chat.messages[chat.messages.length - 1];
+                const unreadCount = chat.messages.filter(m => !m.read && m.senderId !== currentUser.id).length;
+                
+                return `
+                    <div class="chat-item" onclick="openChat('${chatId}')">
+                        <div class="user-avatar-small">${getInitials(partner.firstName, partner.lastName)}</div>
+                        <div class="chat-info">
+                            <div class="chat-partner-name">${partner.firstName} ${partner.lastName}</div>
+                            <div class="last-message">${lastMessage ? lastMessage.text : 'Нет сообщений'}</div>
+                        </div>
+                        <div class="chat-meta">
+                            <div class="last-time">${lastMessage ? formatTime(lastMessage.timestamp) : ''}</div>
+                            ${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Показать эмодзи панель
+        function showEmojiPanel() {
+            const textarea = document.getElementById('postContent');
+            const rect = textarea.getBoundingClientRect();
+            
+            emojiPanel.style.display = 'flex';
+            emojiPanel.style.top = (rect.top - emojiPanel.offsetHeight - 10) + 'px';
+            emojiPanel.style.left = rect.left + 'px';
+        }
+
+        // Добавить эмодзи в текст
+        function addEmojiToText(emoji) {
+            const textarea = document.getElementById('postContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+            emojiPanel.style.display = 'none';
+        }
+
+        // Быстрое добавление русского эмодзи
+        function addRussianEmoji(emoji) {
+            addEmojiToText(emoji);
+        }
+
+        // Скрыть эмодзи панель при клике вне её
+        document.addEventListener('click', function(e) {
+            if (!emojiPanel.contains(e.target) && e.target.id !== 'postContent' && !e.target.closest('.icon-btn')) {
+                emojiPanel.style.display = 'none';
+            }
+        });
+
+        // Инициализация загрузки изображений
+        function initImageUpload() {
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Проверяем размер файла (максимум 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        showError('Файл слишком большой! Максимальный размер - 5MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            if (currentUser) {
+                showMainApp();
+            } else {
+                showLogin();
+            }
+        }
+
+        // Показать приложение
+        function showMainApp() {
+            loginPage.classList.add('hidden');
+            registerPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            navbar.classList.remove('hidden');
+            
+            // Проверяем админские права
+            if (currentUser.email === ADMIN_EMAIL || currentUser.role === 'admin') {
+                adminBadge.classList.remove('hidden');
+                adminNavItem.classList.remove('hidden');
+                mobileAdminNavItem.classList.remove('hidden');
+                currentUser.role = 'admin';
+            } else {
+                // Ограничиваем доступ к админ-панели
+                adminBadge.classList.add('hidden');
+                adminNavItem.classList.add('hidden');
+                mobileAdminNavItem.classList.add('hidden');
+            }
+            
+            updateUserInfo();
+            loadPosts();
+            updateStats();
+            loadUserGallery();
+            loadSupportTickets();
+            loadFriendsList();
+            initChatSystem();
+            if (currentUser.role === 'admin') {
+                loadAdminPanel();
+            }
+            showPage('feed');
+        }
+
+        // Обновление информации пользователя
+        function updateUserInfo() {
+            const userAvatar = document.getElementById('userAvatar');
+            const currentUserAvatar = document.getElementById('currentUserAvatar');
+            const profileUserAvatar = document.getElementById('profileUserAvatar');
+            const profileUserName = document.getElementById('profileUserName');
+            const profileUserEmail = document.getElementById('profileUserEmail');
+            const profileBio = document.getElementById('profileBio');
+
+            const initials = getInitials(currentUser.firstName, currentUser.lastName);
+            
+            userAvatar.textContent = initials;
+            currentUserAvatar.textContent = initials;
+            profileUserAvatar.textContent = initials;
+            profileUserName.textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            profileUserEmail.textContent = currentUser.email;
+            profileBio.textContent = currentUser.bio || 'Пока ничего не рассказал о себе... 📝';
+        }
+
+        // Получить инициалы
+        function getInitials(firstName, lastName) {
+            return (firstName[0] + lastName[0]).toUpperCase();
+        }
+
+        // Показать страницу
+        function showPage(pageName) {
+            // Скрыть все страницы
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Убрать активный класс у всех пунктов меню
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Показать выбранную страницу
+            document.getElementById(pageName + 'Page').classList.add('active');
+
+            // Активировать соответствующий пункт меню
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.textContent.includes(getPageTitle(pageName))) {
+                    item.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                if (item.textContent.includes(getPageTitle(pageName))) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Загрузить данные для страницы
+            if (pageName === 'profile') {
+                loadProfilePosts();
+            } else if (pageName === 'archive') {
+                loadArchiveAccounts();
+            } else if (pageName === 'support') {
+                loadSupportTickets();
+            } else if (pageName === 'friends') {
+                loadFriendsList();
+            } else if (pageName === 'chats') {
+                loadChatsList();
+            } else if (pageName === 'groups') {
+                loadGroupsList();
+            } else if (pageName === 'admin' && currentUser.role === 'admin') {
+                loadAdminPanel();
+            }
+            
+            // Закрыть мобильное меню
+            closeMobileMenu();
+        }
+
+        // Получить заголовок страницы
+        function getPageTitle(pageName) {
+            const titles = {
+                'feed': 'Лента',
+                'profile': 'Профиль',
+                'friends': 'Друзья',
+                'chats': 'Чаты',
+                'groups': 'Группы',
+                'gallery': 'Галерея',
+                'archive': 'Архив',
+                'support': 'Поддержка',
+                'admin': 'Админ-панель'
+            };
+            return titles[pageName] || pageName;
+        }
+
+        // Загрузка сохраненных аккаунтов
+        function loadSavedAccounts() {
+            const savedAccountsContainer = document.getElementById('savedAccounts');
+            
+            if (savedAccounts.length === 0) {
+                savedAccountsContainer.innerHTML = '';
+                return;
+            }
+
+            savedAccountsContainer.innerHTML = `
+                <div style="margin-bottom: 15px; font-weight: 600; color: var(--dark);">
+                    <i class="fas fa-history"></i> Быстрый вход:
+                </div>
+            `;
+            
+            savedAccounts.forEach(account => {
+                const accountElement = document.createElement('div');
+                accountElement.className = 'account-item';
+                accountElement.innerHTML = `
+                    <div class="account-avatar">${getInitials(account.firstName, account.lastName)}</div>
+                    <div class="account-info">
+                        <div class="account-name">${account.firstName} ${account.lastName}</div>
+                        <div class="account-email">${account.email}</div>
+                    </div>
+                `;
+                accountElement.onclick = () => quickLogin(account.email);
+                savedAccountsContainer.appendChild(accountElement);
+            });
+        }
+
+        // Быстрый вход
+        function quickLogin(email) {
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').focus();
+        }
+
+        // Загрузка архива аккаунтов
+        function loadArchiveAccounts() {
+            const archiveList = document.getElementById('archiveAccountsList');
+            
+            if (savedAccounts.length === 0) {
+                archiveList.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-users" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Нет сохраненных аккаунтов</p>
+                    </div>
+                `;
+                return;
+            }
+
+            archiveList.innerHTML = savedAccounts.map(account => `
+                <div class="account-item" onclick="switchAccount('${account.email}')">
+                    <div class="account-avatar">${getInitials(account.firstName, account.lastName)}</div>
+                    <div class="account-info">
+                        <div class="account-name">${account.firstName} ${account.lastName}</div>
+                        <div class="account-email">${account.email}</div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); removeAccount('${account.email}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Переключение аккаунта
+        function switchAccount(email) {
+            const account = savedAccounts.find(acc => acc.email === email);
+            if (account) {
+                currentUser = account;
+                localStorage.setItem('current_user', JSON.stringify(account));
+                showMainApp();
+                showSuccess(`Вы вошли как ${account.firstName} ${account.lastName} 👋`);
+            }
+        }
+
+        // Удаление аккаунта из архива
+        function removeAccount(email) {
+            if (confirm('Удалить этот аккаунт из архива? 🗑️')) {
+                savedAccounts = savedAccounts.filter(acc => acc.email !== email);
+                localStorage.setItem('saved_accounts', JSON.stringify(savedAccounts));
+                loadArchiveAccounts();
+                loadSavedAccounts();
+                showSuccess('Аккаунт удален из архива ✅');
+            }
+        }
+
+        // Система друзей
+        function loadFriendsList() {
+            const friendsList = document.getElementById('friendsList');
+            const userFriends = friends[currentUser.id] || [];
+            
+            if (userFriends.length === 0) {
+                friendsList.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-users" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>У вас пока нет друзей</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Найдите друзей через поиск!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            friendsList.innerHTML = userFriends.map(friendId => {
+                const friend = users.find(u => u.id === friendId);
+                if (!friend || blockedUsers.includes(friendId) || blockedForMe[currentUser.id]?.includes(friendId)) return '';
+                
+                return `
+                    <div class="user-item">
+                        <div class="user-avatar-small">${getInitials(friend.firstName, friend.lastName)}</div>
+                        <div class="user-info">
+                            <div class="user-name">${friend.firstName} ${friend.lastName}</div>
+                            <div class="user-email">${friend.email}</div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="action-btn btn-danger" onclick="removeFriend('${friend.id}')">
+                                <i class="fas fa-user-minus"></i> Удалить
+                            </button>
+                            <button class="action-btn btn-warning" onclick="reportUser('${friend.id}')">
+                                <i class="fas fa-flag"></i> Пожаловаться
+                            </button>
+                            <button class="action-btn btn-success" onclick="startChatWithUser('${friend.id}')">
+                                <i class="fas fa-comment"></i> Чат
+                            </button>
+                            <button class="action-btn btn-secondary" onclick="blockUserForMe('${friend.id}')">
+                                <i class="fas fa-ban"></i> Заблокировать
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addFriend(userId) {
+            if (!friends[currentUser.id]) {
+                friends[currentUser.id] = [];
+            }
+            
+            if (!friends[currentUser.id].includes(userId)) {
+                friends[currentUser.id].push(userId);
+                localStorage.setItem('user_friends', JSON.stringify(friends));
+                loadFriendsList();
+                showSuccess('Пользователь добавлен в друзья! 👥');
+            }
+        }
+
+        function removeFriend(userId) {
+            if (friends[currentUser.id]) {
+                friends[currentUser.id] = friends[currentUser.id].filter(id => id !== userId);
+                localStorage.setItem('user_friends', JSON.stringify(friends));
+                loadFriendsList();
+                showSuccess('Пользователь удален из друзей ❌');
+            }
+        }
+
+        // Блокировка пользователя только для себя
+        function blockUserForMe(userId) {
+            if (confirm('Заблокировать этого пользователя для себя? Вы больше не будете видеть его посты и сообщения.')) {
+                if (!blockedForMe[currentUser.id]) {
+                    blockedForMe[currentUser.id] = [];
+                }
+                
+                if (!blockedForMe[currentUser.id].includes(userId)) {
+                    blockedForMe[currentUser.id].push(userId);
+                    localStorage.setItem('blocked_for_me', JSON.stringify(blockedForMe));
+                    
+                    // Удаляем из друзей если есть
+                    removeFriend(userId);
+                    
+                    // Удаляем чат если есть
+                    if (chats[currentUser.id] && chats[currentUser.id][userId]) {
+                        delete chats[currentUser.id][userId];
+                        localStorage.setItem('user_chats', JSON.stringify(chats));
+                    }
+                    
+                    loadFriendsList();
+                    loadChatsList();
+                    loadPosts();
+                    showSuccess('Пользователь заблокирован для вас 🔒');
+                }
+            }
+        }
+
+        // Разблокировка пользователя для себя
+        function unblockUserForMe(userId) {
+            if (blockedForMe[currentUser.id]) {
+                blockedForMe[currentUser.id] = blockedForMe[currentUser.id].filter(id => id !== userId);
+                localStorage.setItem('blocked_for_me', JSON.stringify(blockedForMe));
+                loadFriendsList();
+                showSuccess('Пользователь разблокирован для вас 🔓');
+            }
+        }
+
+        // Система чатов
+        function loadChatsList() {
+            const chatsList = document.getElementById('chatsList');
+            const userChats = chats[currentUser.id] || {};
+            const chatIds = Object.keys(userChats);
+            
+            if (chatIds.length === 0) {
+                chatsList.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-comments" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>У вас пока нет чатов</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Начните общение с друзьями!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            chatsList.innerHTML = chatIds.map(chatId => {
+                const chat = userChats[chatId];
+                const partner = users.find(u => u.id === chatId);
+                if (!partner || blockedForMe[currentUser.id]?.includes(chatId)) return '';
+                
+                const lastMessage = chat.messages[chat.messages.length - 1];
+                const unreadCount = chat.messages.filter(m => !m.read && m.senderId !== currentUser.id).length;
+                
+                return `
+                    <div class="chat-item" onclick="openChat('${chatId}')">
+                        <div class="user-avatar-small">${getInitials(partner.firstName, partner.lastName)}</div>
+                        <div class="chat-info">
+                            <div class="chat-partner-name">${partner.firstName} ${partner.lastName}</div>
+                            <div class="last-message">${lastMessage ? lastMessage.text : 'Нет сообщений'}</div>
+                        </div>
+                        <div class="chat-meta">
+                            <div class="last-time">${lastMessage ? formatTime(lastMessage.timestamp) : ''}</div>
+                            ${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function startNewChat() {
+            const friendId = prompt('Введите ID друга или его email:');
+            if (friendId) {
+                const friend = users.find(u => u.id === friendId || u.email === friendId);
+                if (friend && friend.id !== currentUser.id) {
+                    startChatWithUser(friend.id);
+                } else {
+                    showError('Пользователь не найден');
+                }
+            }
+        }
+
+        function startChatWithUser(userId) {
+            openChat(userId);
+        }
+
+        function openChat(partnerId) {
+            const partner = users.find(u => u.id === partnerId);
+            if (!partner || blockedForMe[currentUser.id]?.includes(partnerId)) {
+                showError('Нельзя открыть чат с заблокированным пользователем');
+                return;
+            }
+            
+            currentChat = partnerId;
+            
+            // Создаем чат если не существует
+            if (!chats[currentUser.id][partnerId]) {
+                chats[currentUser.id][partnerId] = {
+                    partnerId: partnerId,
+                    messages: [],
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('user_chats', JSON.stringify(chats));
+            }
+            
+            // Обновляем UI
+            document.getElementById('chatPartnerAvatar').textContent = getInitials(partner.firstName, partner.lastName);
+            document.getElementById('chatPartnerName').textContent = `${partner.firstName} ${partner.lastName}`;
+            document.getElementById('chatPartnerStatus').textContent = 'в сети';
+            
+            showPage('chat');
+            loadChatMessages();
+        }
+
+        function loadChatMessages() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const chat = chats[currentUser.id][currentChat];
+            
+            messagesContainer.innerHTML = chat.messages.map(message => {
+                const sender = users.find(u => u.id === message.senderId);
+                const isOwn = message.senderId === currentUser.id;
+                
+                return `
+                    <div class="message ${isOwn ? 'own-message' : 'partner-message'}">
+                        <div class="message-content">
+                            <div class="message-text">${message.text}</div>
+                            <div class="message-time">${formatTime(message.timestamp)}</div>
+                            ${isOwn ? `
+                                <div class="message-actions">
+                                    <button class="message-action-btn" onclick="deleteMessage('${currentChat}', '${message.id}')" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Прокрутка вниз
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentChat) return;
+            
+            const message = {
+                id: generateId(),
+                senderId: currentUser.id,
+                text: text,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+            
+            // Добавляем в свой чат
+            chats[currentUser.id][currentChat].messages.push(message);
+            
+            // Создаем/обновляем чат у получателя
+            if (!chats[currentChat]) chats[currentChat] = {};
+            if (!chats[currentChat][currentUser.id]) {
+                chats[currentChat][currentUser.id] = {
+                    partnerId: currentUser.id,
+                    messages: [],
+                    createdAt: new Date().toISOString()
+                };
+            }
+            chats[currentChat][currentUser.id].messages.push(message);
+            
+            localStorage.setItem('user_chats', JSON.stringify(chats));
+            
+            // Очищаем input и обновляем UI
+            input.value = '';
+            loadChatMessages();
+            loadChatsList(); // Обновляем список чатов
+        }
+
+        // Удаление сообщения
+        function deleteMessage(chatId, messageId) {
+            if (confirm('Удалить это сообщение?')) {
+                const chat = chats[currentUser.id][chatId];
+                if (chat) {
+                    chat.messages = chat.messages.filter(msg => msg.id !== messageId);
+                    localStorage.setItem('user_chats', JSON.stringify(chats));
+                    loadChatMessages();
+                    showSuccess('Сообщение удалено 🗑️');
+                }
+            }
+        }
+
+        // Система групп
+        function loadGroupsList() {
+            const groupsList = document.getElementById('groupsList');
+            const userGroups = Object.values(groups).filter(group => 
+                group.members.includes(currentUser.id)
+            );
+            
+            if (userGroups.length === 0) {
+                groupsList.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-users" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Вы пока не состоите в группах</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Создайте свою первую группу!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            groupsList.innerHTML = userGroups.map(group => `
+                <div class="group-card" onclick="openGroupChat('${group.id}')">
+                    <div class="group-avatar-large">${group.name[0]}</div>
+                    <div class="group-info">
+                        <h4>${group.name}</h4>
+                        <p>${group.description || 'Без описания'}</p>
+                        <div class="group-meta">
+                            <span>${group.members.length} участников</span>
+                            <span>${group.messages ? group.messages.length : 0} сообщений</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showCreateGroupForm() {
+            document.getElementById('createGroupForm').classList.remove('hidden');
+            loadFriendsForGroup();
+        }
+
+        function hideCreateGroupForm() {
+            document.getElementById('createGroupForm').classList.add('hidden');
+        }
+
+        function loadFriendsForGroup() {
+            const container = document.getElementById('groupMembersSelect');
+            const userFriends = friends[currentUser.id] || [];
+            
+            container.innerHTML = userFriends.map(friendId => {
+                const friend = users.find(u => u.id === friendId);
+                if (!friend) return '';
+                
+                return `
+                    <div class="user-select-item">
+                        <input type="checkbox" id="friend-${friend.id}" value="${friend.id}">
+                        <label for="friend-${friend.id}">
+                            <div class="user-avatar-small">${getInitials(friend.firstName, friend.lastName)}</div>
+                            <div class="user-name">${friend.firstName} ${friend.lastName}</div>
+                        </label>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function createGroup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('groupName').value;
+            const description = document.getElementById('groupDescription').value;
+            
+            // Получаем выбранных участников
+            const selectedFriends = [];
+            document.querySelectorAll('#groupMembersSelect input:checked').forEach(checkbox => {
+                selectedFriends.push(checkbox.value);
+            });
+            
+            const group = {
+                id: generateId(),
+                name: name,
+                description: description,
+                creatorId: currentUser.id,
+                members: [currentUser.id, ...selectedFriends],
+                messages: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            groups[group.id] = group;
+            localStorage.setItem('user_groups', JSON.stringify(groups));
+            
+            // Очищаем форму
+            document.getElementById('groupName').value = '';
+            document.getElementById('groupDescription').value = '';
+            document.querySelectorAll('#groupMembersSelect input:checked').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            hideCreateGroupForm();
+            loadGroupsList();
+            showSuccess(`Группа "${name}" создана! 👥`);
+        }
+
+        function openGroupChat(groupId) {
+            currentGroup = groupId;
+            const group = groups[groupId];
+            
+            document.getElementById('groupChatAvatar').textContent = group.name[0];
+            document.getElementById('groupChatName').textContent = group.name;
+            document.getElementById('groupChatMembers').textContent = `${group.members.length} участников`;
+            
+            showPage('groupChat');
+            loadGroupMessages();
+        }
+
+        function loadGroupMessages() {
+            const messagesContainer = document.getElementById('groupChatMessages');
+            const group = groups[currentGroup];
+            
+            messagesContainer.innerHTML = group.messages.map(message => {
+                const sender = users.find(u => u.id === message.senderId);
+                const isOwn = message.senderId === currentUser.id;
+                
+                return `
+                    <div class="message ${isOwn ? 'own-message' : 'group-message'}">
+                        ${!isOwn ? `<div class="message-sender">${sender.firstName} ${sender.lastName}</div>` : ''}
+                        <div class="message-content">
+                            <div class="message-text">${message.text}</div>
+                            <div class="message-time">${formatTime(message.timestamp)}</div>
+                            ${isOwn ? `
+                                <div class="message-actions">
+                                    <button class="message-action-btn" onclick="deleteGroupMessage('${currentGroup}', '${message.id}')" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function sendGroupMessage() {
+            const input = document.getElementById('groupMessageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentGroup) return;
+            
+            const message = {
+                id: generateId(),
+                senderId: currentUser.id,
+                text: text,
+                timestamp: new Date().toISOString()
+            };
+            
+            groups[currentGroup].messages.push(message);
+            localStorage.setItem('user_groups', JSON.stringify(groups));
+            
+            input.value = '';
+            loadGroupMessages();
+        }
+
+        // Удаление сообщения в группе
+        function deleteGroupMessage(groupId, messageId) {
+            if (confirm('Удалить это сообщение?')) {
+                const group = groups[groupId];
+                if (group) {
+                    group.messages = group.messages.filter(msg => msg.id !== messageId);
+                    localStorage.setItem('user_groups', JSON.stringify(groups));
+                    loadGroupMessages();
+                    showSuccess('Сообщение удалено 🗑️');
+                }
+            }
+        }
+
+        function showGroupInfo() {
+            const group = groups[currentGroup];
+            if (!group) return;
+            
+            const memberNames = group.members.map(memberId => {
+                const user = users.find(u => u.id === memberId);
+                return user ? `${user.firstName} ${user.lastName}` : 'Неизвестный';
+            }).join(', ');
+            
+            alert(`Информация о группе:\n\nНазвание: ${group.name}\nОписание: ${group.description || 'Нет описания'}\nУчастники: ${memberNames}`);
+        }
+
+        // Система жалоб
+        function reportUser(userId) {
+            const reason = prompt('Укажите причину жалобы:');
+            if (reason) {
+                const complaint = {
+                    id: generateId(),
+                    reporterId: currentUser.id,
+                    reportedUserId: userId,
+                    reason: reason,
+                    status: 'new',
+                    createdAt: new Date().toISOString()
+                };
+                
+                complaints.push(complaint);
+                localStorage.setItem('user_complaints', JSON.stringify(complaints));
+                showSuccess('Жалоба отправлена администратору! 🛡️');
+            }
+        }
+
+        function reportPost(postId) {
+            const reason = prompt('Укажите причину жалобы на пост:');
+            if (reason) {
+                const complaint = {
+                    id: generateId(),
+                    reporterId: currentUser.id,
+                    postId: postId,
+                    reason: reason,
+                    type: 'post',
+                    status: 'new',
+                    createdAt: new Date().toISOString()
+                };
+                
+                complaints.push(complaint);
+                localStorage.setItem('user_complaints', JSON.stringify(complaints));
+                showSuccess('Жалоба на пост отправлена администратору! 🛡️');
+            }
+        }
+
+        // Админ-панель
+        function loadAdminPanel() {
+            // Проверяем права доступа
+            if (currentUser.role !== 'admin') {
+                showError('Доступ запрещен! У вас нет прав администратора.');
+                showPage('feed');
+                return;
+            }
+            
+            updateAdminStats();
+            loadAdminUsers();
+            loadAdminComplaints();
+        }
+
+        function updateAdminStats() {
+            document.getElementById('adminTotalUsers').textContent = users.filter(u => !u.role).length;
+            document.getElementById('adminBlockedUsers').textContent = blockedUsers.length;
+            document.getElementById('adminTotalPosts').textContent = posts.length;
+            document.getElementById('adminTotalComplaints').textContent = complaints.length;
+        }
+
+        function loadAdminUsers() {
+            const normalUsers = users.filter(user => !user.role);
+            const container = document.getElementById('adminUsersList');
+            
+            if (normalUsers.length === 0) {
+                container.innerHTML = '<div class="no-posts">Нет пользователей</div>';
+                return;
+            }
+
+            container.innerHTML = normalUsers.map(user => {
+                const isBlocked = blockedUsers.includes(user.id);
+                const userPosts = posts.filter(p => p.author.id === user.id).length;
+                const userComplaints = complaints.filter(c => c.reportedUserId === user.id).length;
+                
+                return `
+                    <div class="user-item ${isBlocked ? 'blocked-account' : ''}">
+                        <div class="user-avatar-small">${getInitials(user.firstName, user.lastName)}</div>
+                        <div class="user-info">
+                            <div class="user-name">
+                                ${user.firstName} ${user.lastName}
+                                ${isBlocked ? '<span class="blocked-badge">ЗАБЛОКИРОВАН</span>' : ''}
+                            </div>
+                            <div class="user-email">${user.email}</div>
+                            <div style="font-size: 0.7em; color: #718096;">
+                                Постов: ${userPosts} | Жалоб: ${userComplaints}
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            ${!isBlocked ? `
+                                <button class="action-btn btn-danger" onclick="blockUser('${user.id}')">
+                                    <i class="fas fa-ban"></i> Заблокировать
+                                </button>
+                            ` : `
+                                <button class="action-btn btn-success" onclick="unblockUser('${user.id}')">
+                                    <i class="fas fa-check"></i> Разблокировать
+                                </button>
+                            `}
+                            <button class="action-btn btn-warning" onclick="viewUserPosts('${user.id}')">
+                                <i class="fas fa-eye"></i> Посты
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadAdminComplaints() {
+            const container = document.getElementById('adminComplaintsList');
+            const newComplaints = complaints.filter(c => c.status === 'new');
+            
+            if (newComplaints.length === 0) {
+                container.innerHTML = '<div class="no-posts">Нет новых жалоб</div>';
+                return;
+            }
+
+            container.innerHTML = newComplaints.map(complaint => {
+                const reporter = users.find(u => u.id === complaint.reporterId);
+                const reportedUser = users.find(u => u.id === complaint.reportedUserId);
+                const post = complaint.postId ? posts.find(p => p.id === complaint.postId) : null;
+                
+                return `
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Жалоба от ${reporter ? `${reporter.firstName} ${reporter.lastName}` : 'Неизвестный'}</h4>
+                            <span class="ticket-status status-open">НОВАЯ</span>
+                        </div>
+                        <div class="complaint-meta">
+                            <span>На: ${reportedUser ? `${reportedUser.firstName} ${reportedUser.lastName}` : 'Пост'}</span>
+                            <span>${formatDate(complaint.createdAt)}</span>
+                        </div>
+                        <p><strong>Причина:</strong> ${complaint.reason}</p>
+                        ${post ? `<p><strong>Пост:</strong> ${post.content.substring(0, 100)}...</p>` : ''}
+                        <div class="complaint-actions">
+                            <button class="btn btn-danger" onclick="resolveComplaint('${complaint.id}', 'block')">
+                                <i class="fas fa-ban"></i> Заблокировать пользователя
+                            </button>
+                            <button class="btn btn-warning" onclick="resolveComplaint('${complaint.id}', 'ignore')">
+                                <i class="fas fa-times"></i> Отклонить жалобу
+                            </button>
+                            ${post ? `
+                                <button class="btn btn-secondary" onclick="deletePost('${post.id}', '${complaint.id}')">
+                                    <i class="fas fa-trash"></i> Удалить пост
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function blockUser(userId) {
+            if (confirm('Заблокировать этого пользователя?')) {
+                if (!blockedUsers.includes(userId)) {
+                    blockedUsers.push(userId);
+                    localStorage.setItem('blocked_users', JSON.stringify(blockedUsers));
+                    loadAdminUsers();
+                    updateAdminStats();
+                    showSuccess('Пользователь заблокирован! 🔒');
+                }
+            }
+        }
+
+        function unblockUser(userId) {
+            if (confirm('Разблокировать этого пользователя?')) {
+                blockedUsers = blockedUsers.filter(id => id !== userId);
+                localStorage.setItem('blocked_users', JSON.stringify(blockedUsers));
+                loadAdminUsers();
+                updateAdminStats();
+                showSuccess('Пользователь разблокирован! 🔓');
+            }
+        }
+
+        function resolveComplaint(complaintId, action) {
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.status = 'resolved';
+                complaint.resolvedAt = new Date().toISOString();
+                complaint.action = action;
+                
+                if (action === 'block' && complaint.reportedUserId) {
+                    if (!blockedUsers.includes(complaint.reportedUserId)) {
+                        blockedUsers.push(complaint.reportedUserId);
+                    }
+                }
+                
+                localStorage.setItem('user_complaints', JSON.stringify(complaints));
+                localStorage.setItem('blocked_users', JSON.stringify(blockedUsers));
+                loadAdminComplaints();
+                updateAdminStats();
+                showSuccess('Жалоба обработана! ✅');
+            }
+        }
+
+        function deletePost(postId, complaintId) {
+            if (confirm('Удалить этот пост?')) {
+                posts = posts.filter(p => p.id !== postId);
+                localStorage.setItem('social_posts', JSON.stringify(posts));
+                
+                const complaint = complaints.find(c => c.id === complaintId);
+                if (complaint) {
+                    complaint.status = 'resolved';
+                    complaint.resolvedAt = new Date().toISOString();
+                    complaint.action = 'post_deleted';
+                    localStorage.setItem('user_complaints', JSON.stringify(complaints));
+                }
+                
+                loadAdminComplaints();
+                loadPosts();
+                showSuccess('Пост удален! 🗑️');
+            }
+        }
+
+        function viewUserPosts(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const userPosts = posts.filter(post => post.author.id === userId);
+            let postsText = userPosts.map(post => `📝 ${post.content.substring(0, 50)}...`).join('\n');
+            if (!postsText) postsText = 'Нет постов';
+            
+            alert(`Посты пользователя ${user.firstName} ${user.lastName}:\n\n${postsText}`);
+        }
+
+        function viewUserProfile(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const userPosts = posts.filter(post => post.author.id === userId).length;
+            const userFriends = friends[userId] ? friends[userId].length : 0;
+            
+            alert(`Профиль пользователя:\n\nИмя: ${user.firstName} ${user.lastName}\nEmail: ${user.email}\nПостов: ${userPosts}\nДрузей: ${userFriends}\nБио: ${user.bio || 'Не указано'}`);
+        }
+
+        // Регистрация с проверкой существования аккаунта
+        function register(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            // Проверка существования аккаунта
+            if (users.find(user => user.email === email)) {
+                showError('Аккаунт с таким email уже существует ❌');
+                return;
+            }
+
+            // Проверка длины пароля
+            if (password.length < 6) {
+                showError('Пароль должен содержать не менее 6 символов 🔒');
+                return;
+            }
+
+            const newUser = {
+                id: generateId(),
+                firstName,
+                lastName,
+                email,
+                password,
+                username: email.split('@')[0],
+                bio: '',
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('social_users', JSON.stringify(users));
+
+            // Добавляем в сохраненные аккаунты
+            if (!savedAccounts.find(acc => acc.email === email)) {
+                savedAccounts.push(newUser);
+                localStorage.setItem('saved_accounts', JSON.stringify(savedAccounts));
+            }
+
+            showSuccess('Аккаунт успешно создан! 🎉 Добро пожаловать!');
+            showLogin();
+        }
+
+        // Вход с проверкой существования аккаунта
+        function login(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Проверка существования аккаунта
+            const user = users.find(u => u.email === email);
+            
+            if (!user) {
+                showError('Аккаунт с таким email не найден ❌');
+                return;
+            }
+
+            // Проверка блокировки
+            if (blockedUsers.includes(user.id)) {
+                showError('Ваш аккаунт заблокирован администратором 🔒');
+                return;
+            }
+
+            if (user.password !== password) {
+                showError('Неверный пароль 🔒');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('current_user', JSON.stringify(user));
+
+            // Сохраняем аккаунт если отмечено "Запомнить меня"
+            if (rememberMe && !savedAccounts.find(acc => acc.email === email)) {
+                savedAccounts.push(user);
+                localStorage.setItem('saved_accounts', JSON.stringify(savedAccounts));
+            }
+
+            showMainApp();
+            showSuccess(`С возвращением, ${user.firstName}! 👋`);
+        }
+
+        // Выход
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('current_user');
+            showLogin();
+            showSuccess('Вы вышли из аккаунта 👋');
+        }
+
+        // Создание поста с фото
+        function createPost() {
+            // Проверка блокировки
+            if (blockedUsers.includes(currentUser.id)) {
+                showError('Ваш аккаунт заблокирован. Вы не можете публиковать посты 🔒');
+                return;
+            }
+
+            const content = document.getElementById('postContent').value.trim();
+            const imagePreview = document.getElementById('imagePreview');
+            const imageUpload = document.getElementById('imageUpload');
+            
+            if (!content && !imagePreview.src) {
+                showError('Добавьте текст или фото 📝');
+                return;
+            }
+
+            let imageData = '';
+            if (imagePreview.style.display !== 'none') {
+                imageData = imagePreview.src;
+                
+                // Сохраняем фото в галерею пользователя
+                if (!userImages[currentUser.id]) {
+                    userImages[currentUser.id] = [];
+                }
+                userImages[currentUser.id].push(imageData);
+                localStorage.setItem('user_images', JSON.stringify(userImages));
+            }
+
+            const newPost = {
+                id: generateId(),
+                author: currentUser,
+                content,
+                image: imageData,
+                likes: [],
+                comments: [],
+                createdAt: new Date().toISOString()
+            };
+
+            posts.unshift(newPost);
+            localStorage.setItem('social_posts', JSON.stringify(posts));
+            
+            // Сбрасываем форму
+            document.getElementById('postContent').value = '';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            imageUpload.value = '';
+            
+            loadPosts();
+            updateStats();
+            loadUserGallery();
+            showSuccess('Пост опубликован! 🎉');
+        }
+
+        // Загрузка постов
+        function loadPosts() {
+            const postsContainer = document.getElementById('postsContainer');
+            
+            // Фильтруем посты заблокированных пользователей
+            const visiblePosts = posts.filter(post => 
+                !blockedUsers.includes(post.author.id) && 
+                !blockedForMe[currentUser.id]?.includes(post.author.id)
+            );
+            
+            if (visiblePosts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-newspaper" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>Лента пуста</h3>
+                        <p>Создайте первый пост! ✨</p>
+                    </div>
+                `;
+                return;
+            }
+
+            postsContainer.innerHTML = visiblePosts.map(post => `
+                <div class="post-card fade-in">
+                    <div class="post-user">
+                        <div class="user-avatar">${getInitials(post.author.firstName, post.author.lastName)}</div>
+                        <div class="user-info">
+                            <h4>${post.author.firstName} ${post.author.lastName}</h4>
+                            <div class="username">@${post.author.username}</div>
+                            <div class="post-time">${formatDate(post.createdAt)}</div>
+                        </div>
+                        ${currentUser.role !== 'admin' ? `
+                            <button class="icon-btn report-btn" onclick="reportPost('${post.id}')" title="Пожаловаться">
+                                <i class="fas fa-flag"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                    
+                    ${post.image ? `<img src="${post.image}" class="post-image" alt="Пост">` : ''}
+                    
+                    <div class="post-stats">
+                        <span>${post.likes.length} ❤️</span>
+                        <span>${post.comments.length} 💬</span>
+                    </div>
+                    
+                    <div class="post-actions-buttons">
+                        <button class="action-button like-button ${post.likes.includes(currentUser.id) ? 'liked' : ''}" 
+                                onclick="toggleLike('${post.id}')">
+                            <i class="fas fa-heart"></i>
+                            ${post.likes.includes(currentUser.id) ? '❤️' : '🤍'} Нравится
+                        </button>
+                        <button class="action-button comment-button" onclick="toggleComments('${post.id}')">
+                            <i class="fas fa-comment"></i>
+                            Комментировать
+                        </button>
+                    </div>
+                    
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        <form class="comment-form" onsubmit="addComment('${post.id}', event)">
+                            <input type="text" id="comment-${post.id}" placeholder="Напишите комментарий... 💬" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                        
+                        <div class="comments-list">
+                            ${post.comments.map(comment => `
+                                <div class="comment">
+                                    <div class="comment-avatar">${getInitials(comment.author.firstName, comment.author.lastName)}</div>
+                                    <div class="comment-content">
+                                        <div class="comment-header">
+                                            <strong>${comment.author.firstName} ${comment.author.lastName}</strong>
+                                            <span>${formatDate(comment.createdAt)}</span>
+                                        </div>
+                                        <p>${comment.content}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Загрузка галереи пользователя
+        function loadUserGallery() {
+            const galleryContainer = document.getElementById('userGallery');
+            const userPhotos = userImages[currentUser.id] || [];
+
+            if (userPhotos.length === 0) {
+                galleryContainer.innerHTML = `
+                    <div class="no-posts" style="grid-column: 1 / -1;">
+                        <i class="fas fa-images" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>В вашей галерее пока нет фото 📸</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Добавляйте фото в свои посты!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            galleryContainer.innerHTML = userPhotos.map((photo, index) => `
+                <div class="gallery-item" onclick="viewImage('${photo}')">
+                    <img src="${photo}" alt="Фото ${index + 1}">
+                </div>
+            `).join('');
+        }
+
+        // Просмотр изображения
+        function viewImage(src) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                cursor: pointer;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 10px;
+            `;
+            
+            overlay.appendChild(img);
+            overlay.onclick = () => overlay.remove();
+            
+            document.body.appendChild(overlay);
+        }
+
+        // Загрузка постов профиля
+        function loadProfilePosts() {
+            const profilePostsContainer = document.getElementById('profilePostsContainer');
+            const userPosts = posts.filter(post => post.author.id === currentUser.id);
+
+            if (userPosts.length === 0) {
+                profilePostsContainer.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-edit" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>У вас пока нет постов ✍️</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Начните делиться своими мыслями!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            profilePostsContainer.innerHTML = userPosts.map(post => `
+                <div class="post-card">
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                    ${post.image ? `<img src="${post.image}" class="post-image" alt="Пост">` : ''}
+                    <div class="post-stats">
+                        <span>${post.likes.length} ❤️</span>
+                        <span>${post.comments.length} 💬</span>
+                        <span>${formatDate(post.createdAt)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Система поддержки
+        function showCreateTicketForm() {
+            document.getElementById('createTicketForm').classList.remove('hidden');
+        }
+
+        function hideCreateTicketForm() {
+            document.getElementById('createTicketForm').classList.add('hidden');
+        }
+
+        function createSupportTicket(event) {
+            event.preventDefault();
+            
+            const subject = document.getElementById('ticketSubject').value;
+            const type = document.getElementById('ticketType').value;
+            const description = document.getElementById('ticketDescription').value;
+
+            const newTicket = {
+                id: generateId(),
+                userId: currentUser.id,
+                subject,
+                type,
+                description,
+                status: 'open',
+                createdAt: new Date().toISOString(),
+                responses: []
+            };
+
+            supportTickets.unshift(newTicket);
+            localStorage.setItem('support_tickets', JSON.stringify(supportTickets));
+
+            // Очищаем форму
+            document.getElementById('ticketSubject').value = '';
+            document.getElementById('ticketType').value = '';
+            document.getElementById('ticketDescription').value = '';
+            
+            hideCreateTicketForm();
+            loadSupportTickets();
+            showSuccess('Обращение отправлено в поддержку! 🛠️ Мы ответим в ближайшее время.');
+        }
+
+        function loadSupportTickets() {
+            const ticketsContainer = document.getElementById('ticketsContainer');
+            const userTickets = supportTickets.filter(ticket => ticket.userId === currentUser.id);
+
+            if (userTickets.length === 0) {
+                ticketsContainer.innerHTML = `
+                    <div class="no-posts">
+                        <i class="fas fa-ticket-alt" style="font-size: 2em; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>У вас пока нет обращений в поддержку</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Создайте первое обращение!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ticketsContainer.innerHTML = userTickets.map(ticket => `
+                <div class="support-ticket">
+                    <div class="ticket-header">
+                        <h4>${ticket.subject}</h4>
+                        <span class="ticket-status status-${ticket.status}">
+                            ${ticket.status === 'open' ? 'Открыто' : 
+                              ticket.status === 'closed' ? 'Закрыто' : 'В обработке'}
+                        </span>
+                    </div>
+                    <div class="ticket-date">
+                        ${formatDate(ticket.createdAt)} • ${getTicketTypeText(ticket.type)}
+                    </div>
+                    <p style="margin: 10px 0; line-height: 1.5;">${ticket.description}</p>
+                    ${ticket.responses.length > 0 ? `
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #E2E8F0;">
+                            <strong>Ответ поддержки:</strong>
+                            <p style="margin-top: 5px; color: #4A5568;">${ticket.responses[0].message}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function getTicketTypeText(type) {
+            const types = {
+                'technical': 'Техническая проблема',
+                'account': 'Проблема с аккаунтом',
+                'content': 'Жалоба на контент',
+                'suggestion': 'Предложение',
+                'other': 'Другое'
+            };
+            return types[type] || type;
+        }
+
+        // Лайк поста
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            const likeIndex = post.likes.indexOf(currentUser.id);
+            
+            if (likeIndex > -1) {
+                post.likes.splice(likeIndex, 1);
+            } else {
+                post.likes.push(currentUser.id);
+            }
+
+            localStorage.setItem('social_posts', JSON.stringify(posts));
+            loadPosts();
+            updateStats();
+        }
+
+        // Показать/скрыть комментарии
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            const isVisible = commentsSection.style.display !== 'none';
+            
+            document.querySelectorAll('.comments-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            if (!isVisible) {
+                commentsSection.style.display = 'block';
+            }
+        }
+
+        // Добавить комментарий
+        function addComment(postId, event) {
+            event.preventDefault();
+            
+            const commentInput = document.getElementById(`comment-${postId}`);
+            const content = commentInput.value.trim();
+            
+            if (!content) return;
+
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            const newComment = {
+                id: generateId(),
+                author: currentUser,
+                content,
+                createdAt: new Date().toISOString()
+            };
+
+            post.comments.push(newComment);
+            localStorage.setItem('social_posts', JSON.stringify(posts));
+            
+            commentInput.value = '';
+            loadPosts();
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            const userPosts = posts.filter(post => post.author.id === currentUser.id);
+            const totalLikes = userPosts.reduce((sum, post) => sum + post.likes.length, 0);
+            const userPhotos = userImages[currentUser.id] || [];
+            const totalPhotos = userPhotos.length;
+
+            document.getElementById('statPosts').textContent = userPosts.length;
+            document.getElementById('statPhotos').textContent = totalPhotos;
+            document.getElementById('statLikes').textContent = totalLikes;
+
+            document.getElementById('profileStatPosts').textContent = userPosts.length;
+            document.getElementById('profileStatPhotos').textContent = totalPhotos;
+            document.getElementById('profileStatLikes').textContent = totalLikes;
+        }
+
+        // Редактирование профиля
+        function editProfile() {
+            const newBio = prompt('Расскажите о себе:', currentUser.bio || '');
+            if (newBio !== null) {
+                currentUser.bio = newBio;
+                
+                // Обновляем пользователя в хранилище
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('social_users', JSON.stringify(users));
+                }
+                
+                localStorage.setItem('current_user', JSON.stringify(currentUser));
+                updateUserInfo();
+                showSuccess('Профиль обновлен! ✅');
+            }
+        }
+
+        // Утилиты
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'только что';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)} мин назад`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)} ч назад`;
+            
+            return date.toLocaleString('ru-RU', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function showError(message) {
+            showMessage(message, 'error');
+        }
+
+        function showSuccess(message) {
+            showMessage(message, 'success');
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.zIndex = '1000';
+            messageDiv.style.maxWidth = '300px';
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 4000);
+        }
+
+        function showLogin() {
+            loginPage.classList.remove('hidden');
+            registerPage.classList.add('hidden');
+            mainContent.classList.add('hidden');
+            navbar.classList.add('hidden');
+            loadSavedAccounts();
+        }
+
+        function showRegister() {
+            loginPage.classList.add('hidden');
+            registerPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            navbar.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
